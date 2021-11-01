@@ -718,9 +718,18 @@ MicMicrodownSnippetFactory >> quoteSample [
 ]
 
 { #category : #format }
-MicMicrodownSnippetFactory >> rawFormatSample [
+MicMicrodownSnippetFactory >> rawFormatInline [
+
 	^ '
-a{{Foo}}b
+a{{_$Foo_}}b
+'
+]
+
+{ #category : #format }
+MicMicrodownSnippetFactory >> rawFormatSample [
+
+	^ '
+{{_$Foo_}}
 '
 ]
 
