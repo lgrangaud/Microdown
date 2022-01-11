@@ -33,6 +33,16 @@ MicHTMLExporterTest >> testAccents [
 <p>&eacute;&agrave;</p>'
 ]
 
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testGoutDeFraise [
+	self skip.
+	self parse: factory figureGoutDeFraise andCheckWeGet: '
+<figure>
+  <img src="un-gout-de-fraise.jpg" alt="" />
+  <figcaption>Proposition pour le thème : <br><em>Un goût de fraise</em></figcaption>
+</figure>'
+]
+
 { #category : #tests }
 MicHTMLExporterTest >> testHeaderLevel1 [
 
@@ -130,16 +140,5 @@ MicHTMLExporterTest >> testUnorderedList [
 MicHTMLExporterTest >> testfigure [
 
 	self parse: factory figureSample andCheckWeGet: '
-<p><img src="/anUrl label=figureTest&size=80" alt="Foo"></p>'
-]
-
-{ #category : #'tests - formats' }
-MicHTMLExporterTest >> testfigureBold [
-
-	self flag: #todo.
-	self parse: factory figureBoldSample andCheckWeGet: '
-<figure>
-  <img src="un-gout-de-fraise.jpg" alt="" />
-  <figcaption>Proposition pour le thème : <br><em>Un goût de fraise</em> du jeu <a href="http://www.photogame.fr/">PhotoGame</a></figcaption>
-</figure>'
+<p><img src="/anUrl" alt="Foo"></p>'
 ]

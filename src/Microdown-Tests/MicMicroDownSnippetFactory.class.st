@@ -238,6 +238,14 @@ MicMicrodownSnippetFactory >> figureBoldSample [
 ]
 
 { #category : #format }
+MicMicrodownSnippetFactory >> figureGoutDeFraise [
+	^ '
+
+![Proposition pour le thème : _Un goût de fraise_](un-gout-de-fraise.jpg)
+'
+]
+
+{ #category : #format }
 MicMicrodownSnippetFactory >> figureItalicSample [
 
 	^ '

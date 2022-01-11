@@ -33,7 +33,7 @@ MicHTMLWriter >> exportImgFor: aFigure [
 	| img |
 	img := canvas tag
 		       name: 'img';
-		       parameterAt: 'src' put: aFigure localFileOrExternalReference;
+		       parameterAt: 'src' put: aFigure reference path;
 		       yourself.
 	"aFigure hasLabel ifTrue: [ img parameterAt: 'id' put: aFigure label ]."
 	img parameterAt: 'alt' put: (aFigure hasChildren
@@ -65,6 +65,11 @@ MicHTMLWriter >> languageForScript: aScript [
 	^ aScript language isSpecified
 		  ifTrue: [ aScript language ]
 		  ifFalse: [ self configuration defaultScriptLanguage ]
+]
+
+{ #category : #visiting }
+MicHTMLWriter >> localFileOrExternalReference [
+	^ self class localFileOrExternalReference: self reference
 ]
 
 { #category : #initialization }
