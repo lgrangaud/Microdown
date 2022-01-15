@@ -135,6 +135,13 @@ MicMicrodownSnippetFactory >> boldFormatSample [
 	^ self surroundWithMarkup: self parserClass boldMarkup
 ]
 
+{ #category : #format }
+MicMicrodownSnippetFactory >> codeBlockSample [
+	^ '
+```ab```
+'
+]
+
 { #category : #'code block' }
 MicMicrodownSnippetFactory >> codeblock: param [ 
 
@@ -285,7 +292,7 @@ MicMicrodownSnippetFactory >> figureSample [
 
 	^ '
 
-![Foo](/anUrl label=figureTest&size=80)
+![Foo](/anUrl)
 '
 ]
 
@@ -295,6 +302,24 @@ MicMicrodownSnippetFactory >> figureStrikeSample [
 	^ '
 
 ![~Foo~](/anUrl label=figureTest&size=80)
+'
+]
+
+{ #category : #format }
+MicMicrodownSnippetFactory >> figureWithLabelWithoutSizeSample [
+
+	^ '
+
+![Foo](/anUrl label=figureTest)
+'
+]
+
+{ #category : #format }
+MicMicrodownSnippetFactory >> figureWithoutCaptionSample [
+
+	^ '
+
+![](/anUrl label=figureTest&size=80)
 '
 ]
 

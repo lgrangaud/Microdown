@@ -2,7 +2,8 @@ Class {
 	#name : #MicHTMLWriter,
 	#superclass : #MicrodownVisitor,
 	#instVars : [
-		'canvas'
+		'canvas',
+		'arguments'
 	],
 	#category : #'Microdown-HTMLExporter'
 }
@@ -33,13 +34,28 @@ MicHTMLWriter >> exportImgFor: aFigure [
 	| img |
 	img := canvas tag
 		       name: 'img';
-		       parameterAt: 'src' put: aFigure reference path;
+		       parameterAt: 'src' put: aFigure localFileOrExternalReference;
 		       yourself.
 	"aFigure hasLabel ifTrue: [ img parameterAt: 'id' put: aFigure label ]."
 	img parameterAt: 'alt' put: (aFigure hasChildren
 			 ifTrue: [ aFigure text ]
 			 ifFalse: [ '' ]).
-	img closeTag
+	aFigure hasArguments ifTrue: [ 
+			img parameterAt: 'class' put: (aFigure arguments at: 'label')].
+	aFigure hasArguments ifTrue: [ 
+			img parameterAt: 'width' put: (aFigure arguments at: 'size')].
+
+	"aFigure hasArguments ifTrue: [
+	img
+		parameterAt: 'width'
+		put: (aFigure arguments at: 'size')."
+	img closeTag.
+	canvas tag
+		name: 'figcaption';
+		with: [ 
+			aFigure hasCaption ifTrue: [ 
+					self visitAll: aFigure captionElements ] ].
+	canvas newLine
 ]
 
 { #category : #visiting }
@@ -57,6 +73,12 @@ MicHTMLWriter >> initialize [
 	stream := MicOutputStream new setStream: (WriteStream on: (String new: 1000)).
 	canvas := self canvasClass on: stream.
 	
+]
+
+{ #category : #visiting }
+MicHTMLWriter >> isSyntaxHighlightingPossible [
+
+	^ true
 ]
 
 { #category : #visiting }
@@ -80,6 +102,12 @@ MicHTMLWriter >> usedNewLine [
 ]
 
 { #category : #visiting }
+MicHTMLWriter >> visitAnchor: anAnchor [
+
+	self createAnchorWith: anAnchor label 
+]
+
+{ #category : #visiting }
 MicHTMLWriter >> visitBold: aBoldText [
 
 	canvas tag
@@ -88,12 +116,11 @@ MicHTMLWriter >> visitBold: aBoldText [
 ]
 
 { #category : #visiting }
-MicHTMLWriter >> visitCodeblock: aCodeBlock [
+MicHTMLWriter >> visitCode: aCodeBlock [
+
+	self halt.
 
 	canvas tag
-		name: 'figure';
-		with: [ 
-			canvas tag
 				name: 'pre';
 				with: [ 
 					| code language |
@@ -111,7 +138,7 @@ MicHTMLWriter >> visitCodeblock: aCodeBlock [
 							self createAnchorWith: aCodeBlock label.
 							self writeCounterForScript: aCodeBlock ].
 					aCodeBlock hasCaption ifTrue: [ 
-							self visitAll: aCodeBlock caption children ] ] ].
+							self visitAll: aCodeBlock caption children ] ] .
 	canvas newLine
 ]
 
@@ -132,11 +159,11 @@ MicHTMLWriter >> visitHeader: aHeader [
 ]
 
 { #category : #visiting }
-MicHTMLWriter >> visitItalic: aBoldText [
+MicHTMLWriter >> visitItalic: aItalicText [
 
 	canvas tag
 		name: 'em';
-		with: [ super visitItalic: aBoldText ]
+		with: [ super visitItalic: aItalicText ]
 ]
 
 { #category : #visiting }

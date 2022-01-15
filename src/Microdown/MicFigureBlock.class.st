@@ -15,10 +15,23 @@ Class {
 	#superclass : #MicInlineBlockWithUrl,
 	#instVars : [
 		'parameters',
-		'reference'
+		'reference',
+		'label',
+		'size',
+		'arguments'
 	],
 	#category : #'Microdown-ModelInline'
 }
+
+{ #category : #accessing }
+MicFigureBlock class >> localFileOrExternalReference: aString [
+
+	| localFileIndicator |
+	localFileIndicator := 'file://'.
+	^ (aString beginsWith: localFileIndicator)
+		  ifTrue: [ aString allButFirst: localFileIndicator size ]
+		  ifFalse: [ aString ]
+]
 
 { #category : #converting }
 MicFigureBlock >> accept: aVisitor [
@@ -100,6 +113,12 @@ MicFigureBlock >> kind [
 	self flag: #todo. 
 	"remove me"
  	^ #figure
+]
+
+{ #category : #accessing }
+MicFigureBlock >> localFileOrExternalReference [
+
+	^ self class localFileOrExternalReference: reference originalString asString
 ]
 
 { #category : #accessing }

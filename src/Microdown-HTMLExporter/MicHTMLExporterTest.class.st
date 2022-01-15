@@ -18,6 +18,11 @@ MicHTMLExporterTest >> parse: aString andCheckWeGet: aResultingString [
 	self assert: writer contents equals: aResultingString
 ]
 
+{ #category : #accessing }
+MicHTMLExporterTest >> parser [
+	^ parser
+]
+
 { #category : #running }
 MicHTMLExporterTest >> setUp [
 	super setUp.
@@ -33,14 +38,111 @@ MicHTMLExporterTest >> testAccents [
 <p>&eacute;&agrave;</p>'
 ]
 
+{ #category : #tests }
+MicHTMLExporterTest >> testAnchor [
+
+	self parse: factory anchorSample andCheckWeGet:  '<a id="test"></a>'
+	
+]
+
+{ #category : #tests }
+MicHTMLExporterTest >> testAnchorIsAttachedToItsTarget [
+	| linker doc |
+	linker := MicAnchorLinker new.
+	doc := MicroDownParser parse: '
+this is a sentence
+
+#Header1
+@sec1'.
+	linker visit: doc.
+	self assert: doc children second class equals: MicHeaderBlock.
+	self assert: doc children third class equals: MicAnchorBlock.
+	self assert: doc children third target class equals: MicHeaderBlock
+	
+]
+
+{ #category : #tests }
+MicHTMLExporterTest >> testCodeCreatesInnerText [
+
+	| code |
+	code := (self parser parse: '```a b```') children first.
+	self assert: code class equals: MicCodeBlock.
+	self assert: code firstTag equals: 'a b```'
+]
+
+{ #category : #tests }
+MicHTMLExporterTest >> testCodeWithoutParam [
+
+	| doc |
+	self halt.
+
+	doc := (parser parse: '```ab```')children first.
+	writer visit: doc.
+	self assert: writer contents equals: '<pre><code>ab</code></pre>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigure [
+
+	self parse: factory figureSample andCheckWeGet: '
+<p><img src="/anUrl" alt="Foo"/><figcaption>Foo</figcaption>
+</p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigureItalic [
+
+	self parse: factory figureItalicSample andCheckWeGet: '
+<p><img src="/anUrl" alt="_Foo_" class="figureTest" width="80"/><figcaption><em>Foo</em></figcaption>
+</p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigureNested [
+
+	self parse: factory figureNestedSample andCheckWeGet: '
+<p><img src="/anUrl" alt="**Foo_**" class="figureTest" width="80"/><figcaption><strong>Foo_</strong></figcaption>
+</p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigureReal [
+
+	self parse: factory figureRealSample andCheckWeGet: '
+<p><img src="figures/logo.png" alt="A logo png under figures folder" class="figureTest" width="80"/><figcaption>A logo png under figures folder</figcaption>
+</p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigureStrike [
+
+	self parse: factory figureStrikeSample andCheckWeGet: '
+<p><img src="/anUrl" alt="~Foo~" class="figureTest" width="80"/><figcaption><strike>Foo</strike></figcaption>
+</p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigureWithLabelWithoutSize [
+
+	self parse: factory figureWithLabelWithoutSizeSample andCheckWeGet: '
+<p><img src="/anUrl" alt="" class="figureTest"/><figcaption></figcaption>
+</p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testFigureWithoutCaption [
+
+	self parse: factory figureWithoutCaptionSample andCheckWeGet: '
+<p><img src="/anUrl" alt="" class="figureTest" width="80"/><figcaption></figcaption>
+</p>'
+]
+
 { #category : #'tests - formats' }
 MicHTMLExporterTest >> testGoutDeFraise [
+
 	self skip.
 	self parse: factory figureGoutDeFraise andCheckWeGet: '
-<figure>
-  <img src="un-gout-de-fraise.jpg" alt="" />
-  <figcaption>Proposition pour le thème : <br><em>Un goût de fraise</em></figcaption>
-</figure>'
+<p><img src="un-gout-de-fraise.jpg" alt="Proposition pour le thème : _Un goût de fraise_" /><figcaption>Proposition pour le thème : <br><em>Un goût de fraise</em></figcaption></p>'
 ]
 
 { #category : #tests }
@@ -67,7 +169,7 @@ MicHTMLExporterTest >> testParagraph [
 { #category : #'tests - paragraph' }
 MicHTMLExporterTest >> testParagraphLongWithAccents [
 
-	self parse: factory paragraphOnMultipleLinesSample andCheckWeGet:  '
+	self parse: factory paragraphOnMultipleLinesSample andCheckWeGet: '
 <p>Je ne connais pas la peur, car la peur tue l''esprit. La peur est la petite mort qui conduit &agrave; l''oblit&eacute;ration totale. J''affonterai ma peur. Je lui permettrais de passer sur moi, au travers de moi. Et lorsqu''elle sera pass&eacute;e, je tournerai mon oeil interieur sur son chemin. Et l&agrave; o&ugrave; elle sera pass&eacute;e, il n''y aura plus rien, rien que moi.</p>'
 ]
 
@@ -88,7 +190,7 @@ MicHTMLExporterTest >> testParagraphWithBold [
 { #category : #'tests - formats' }
 MicHTMLExporterTest >> testParagraphWithItalic [
 
-	self parse: factory paragraphItalicSample andCheckWeGet:  '
+	self parse: factory paragraphItalicSample andCheckWeGet: '
 <p>this is a <em>paragraph</em></p>'
 ]
 

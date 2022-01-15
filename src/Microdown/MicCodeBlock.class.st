@@ -150,3 +150,11 @@ MicCodeBlock >> lineStartMarkup [
 	
 	^ self parser codeblockMarkup 
 ]
+
+{ #category : #accessing }
+MicCodeBlock >> size [
+
+	"precondition: receiver hasLabel"
+
+	^ arguments at: #size
+]
