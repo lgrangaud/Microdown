@@ -156,6 +156,26 @@ MicHTMLWriter >> visitMonospace: aMonospace [
 		with: [ super visitMonospace: aMonospace ]
 ]
 
+{ #category : #'visiting - list' }
+MicHTMLWriter >> visitOrderedList: anOrderedList [
+
+	canvas newLine.
+	canvas tag
+		name: 'ol';
+		with: [ 
+			canvas newLine.
+			super visitOrderedList: anOrderedList ]
+]
+
+{ #category : #'visiting - list' }
+MicHTMLWriter >> visitOrderedListItem: anOrderedListItem [
+
+	canvas tag
+		name: 'li';
+		with: anOrderedListItem text.
+	canvas newLine
+]
+
 { #category : #visiting }
 MicHTMLWriter >> visitParagraph: aParagraph [
 

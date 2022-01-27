@@ -206,7 +206,7 @@ MicRealDumper >> visitLink: aMicLink [
 	stream nextPut: $)
 ]
 
-{ #category : #'visit - section' }
+{ #category : #'visiting - list' }
 MicRealDumper >> visitListItem: anItem [
 
 	stream nextPut: $(.
@@ -215,11 +215,10 @@ MicRealDumper >> visitListItem: anItem [
 	stream
 		nextPutAll: 'new';
 		space.
-	anItem children 
-		do: [ :each | each accept: self ]
-		separatedBy: [ ''.	'' ].
+	anItem children do: [ :each | each accept: self ] separatedBy: [ 
+		''.
+		'' ].
 	stream nextPut: $).
-	self flag: #todo.
 	"qd on a une liste elle contient des items e.g. une liste de inline model"
 ]
 
