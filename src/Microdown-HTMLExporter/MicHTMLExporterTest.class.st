@@ -74,9 +74,9 @@ MicHTMLExporterTest >> testCodeCreatesInnerText [
 MicHTMLExporterTest >> testCodeWithoutParam [
 
 	| doc |
-	self halt.
-
-	doc := (parser parse: '```ab```')children first.
+	doc := (parser parse: '```
+ab
+```') children first.
 	writer visit: doc.
 	self assert: writer contents equals: '<pre><code>ab</code></pre>'
 ]
@@ -124,8 +124,10 @@ MicHTMLExporterTest >> testFigureStrike [
 { #category : #'tests - formats' }
 MicHTMLExporterTest >> testFigureWithLabelWithoutSize [
 
-	self parse: factory figureWithLabelWithoutSizeSample andCheckWeGet: '
-<p><img src="/anUrl" alt="" class="figureTest"/><figcaption></figcaption>
+	self
+		parse: factory figureWithLabelWithoutSizeSample
+		andCheckWeGet: '
+<p><img src="/anUrl" alt="Foo" class="figureTest"/><figcaption>Foo</figcaption>
 </p>'
 ]
 
@@ -140,9 +142,9 @@ MicHTMLExporterTest >> testFigureWithoutCaption [
 { #category : #'tests - formats' }
 MicHTMLExporterTest >> testGoutDeFraise [
 
-	self skip.
 	self parse: factory figureGoutDeFraise andCheckWeGet: '
-<p><img src="un-gout-de-fraise.jpg" alt="Proposition pour le thème : _Un goût de fraise_" /><figcaption>Proposition pour le thème : <br><em>Un goût de fraise</em></figcaption></p>'
+<p><img src="un-gout-de-fraise.jpg" alt="Proposition pour le thème : _Un goût de fraise_"/><figcaption>Proposition pour le th&egrave;me : <em>Un goût de fraise</em></figcaption>
+</p>'
 ]
 
 { #category : #tests }
@@ -185,6 +187,28 @@ MicHTMLExporterTest >> testParagraphWithBold [
 
 	self parse: factory paragraphBoldSample andCheckWeGet:  '
 <p>this is a <strong>paragraph</strong></p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testParagraphWithBoldItalic [
+
+	self
+		parse: factory paragraphWithBoldItalicHeaderSample
+		andCheckWeGet: '
+<h1>Header1</h1>
+<h2>Header2</h2>
+<p>this is a paragraph with <strong>bold text</strong> and <em>italic text</em></p>'
+]
+
+{ #category : #'tests - formats' }
+MicHTMLExporterTest >> testParagraphWithBoldItalicHeader [
+
+	self
+		parse: factory paragraphWithBoldItalicHeaderSample
+		andCheckWeGet: '
+<h1>Header1</h1>
+<h2>Header2</h2>
+<p>this is a paragraph with <strong>bold text</strong> and <em>italic text</em></p>'
 ]
 
 { #category : #'tests - formats' }
@@ -242,5 +266,25 @@ MicHTMLExporterTest >> testUnorderedList [
 MicHTMLExporterTest >> testfigure [
 
 	self parse: factory figureSample andCheckWeGet: '
-<p><img src="/anUrl" alt="Foo"></p>'
+<p><img src="/anUrl" alt="Foo"/><figcaption>Foo</figcaption>
+</p>'
+]
+
+{ #category : #'tests - list' }
+MicHTMLExporterTest >> testorderedList [
+
+	self parse: factory orderedListWithTwoItemsSample andCheckWeGet: '
+<ol>
+<li>first</li>
+<li>second</li>
+</ol>'.
+]
+
+{ #category : #'tests - list' }
+MicHTMLExporterTest >> testorderedListEmpty [
+
+	self parse: factory orderedListEmptySample andCheckWeGet: '
+<ol>
+<li>.</li>
+</ol>'
 ]

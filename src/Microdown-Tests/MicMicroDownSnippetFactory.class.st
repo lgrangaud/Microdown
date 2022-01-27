@@ -659,11 +659,10 @@ MicMicrodownSnippetFactory >> orderedListWithTwoItemsBoldFirstSample [
 
 { #category : #list }
 MicMicrodownSnippetFactory >> orderedListWithTwoItemsBoldSample [
-	
-	^ 
-'
+
+	^ '
 1. **first**
-1. second
+2. second
 '
 ]
 
@@ -751,6 +750,24 @@ Foo
 MicMicrodownSnippetFactory >> paragraphStrikeSample [
 	^ '
 this is a ~paragraph~
+'
+]
+
+{ #category : #format }
+MicMicrodownSnippetFactory >> paragraphWithBoldItalicHeaderSample [
+
+	^ '
+#Header1
+## Header2
+this is a paragraph with **bold text** and _italic text_
+'
+]
+
+{ #category : #format }
+MicMicrodownSnippetFactory >> paragraphWithBoldItalicSample [
+
+	^ '
+this is a paragraph with **bold text** and _italic text_
 '
 ]
 

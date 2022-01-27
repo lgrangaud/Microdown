@@ -54,5 +54,18 @@ MicFileHTMLWriterTest >> testConvertFile [
 	self assert: (filesystem / 'anExample1.html') asFileReference exists.
 	self assert: (filesystem / 'anExample1.html') asFileReference contents equals: '
 <h1>Foo</h1><a id="sec1"></a>
-<p>Pharo is cool</p>'.
+<p>Pharo is cool</p><pre><code> this is a code</code></pre>'.
+]
+
+{ #category : #tests }
+MicFileHTMLWriterTest >> testConvertFile2 [
+
+	converter convertFile: (filesystem / 'anExample2.md') asFileReference.
+
+	self assert: (filesystem / 'anExample2.html') asFileReference exists.
+	self
+		assert: (filesystem / 'anExample2.html') asFileReference contents
+		equals: '
+<h2>Bar</h2><a id="sec2"></a>
+<p>Pharo is <strong>cool</strong></p><pre><code> this is a code 2</code></pre>'
 ]

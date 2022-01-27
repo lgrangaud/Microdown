@@ -36,19 +36,13 @@ MicHTMLWriter >> exportImgFor: aFigure [
 		       name: 'img';
 		       parameterAt: 'src' put: aFigure localFileOrExternalReference;
 		       yourself.
-	"aFigure hasLabel ifTrue: [ img parameterAt: 'id' put: aFigure label ]."
 	img parameterAt: 'alt' put: (aFigure hasChildren
 			 ifTrue: [ aFigure text ]
 			 ifFalse: [ '' ]).
-	aFigure hasArguments ifTrue: [ 
-			img parameterAt: 'class' put: (aFigure arguments at: 'label')].
-	aFigure hasArguments ifTrue: [ 
-			img parameterAt: 'width' put: (aFigure arguments at: 'size')].
-
-	"aFigure hasArguments ifTrue: [
-	img
-		parameterAt: 'width'
-		put: (aFigure arguments at: 'size')."
+	aFigure hasLabel ifTrue: [ 
+		img parameterAt: 'class' put: (aFigure arguments at: 'label') ].
+	aFigure hasWidth ifTrue: [ 
+		img parameterAt: 'width' put: (aFigure arguments at: 'size') ].
 	img closeTag.
 	canvas tag
 		name: 'figcaption';
@@ -56,14 +50,6 @@ MicHTMLWriter >> exportImgFor: aFigure [
 			aFigure hasCaption ifTrue: [ 
 					self visitAll: aFigure captionElements ] ].
 	canvas newLine
-]
-
-{ #category : #visiting }
-MicHTMLWriter >> hasLabel [
-
-	| label |
-	label := self parameters at: 'label' ifAbsent: [ ^ false ].
-	^ label isEmptyOrNil not
 ]
 
 { #category : #initialization }
@@ -118,28 +104,24 @@ MicHTMLWriter >> visitBold: aBoldText [
 { #category : #visiting }
 MicHTMLWriter >> visitCode: aCodeBlock [
 
-	self halt.
-
 	canvas tag
-				name: 'pre';
-				with: [ 
-					| code language |
-					code := canvas tag
-						        name: 'code';
-						        yourself.
-					language := self languageForScript: aCodeBlock.
-					language isSyntaxHighlightingPossible ifTrue: [ 
-						code parameterAt: 'class' put: language printString ].
-					code with: [ canvas lines: aCodeBlock text ] ].
-			canvas tag
-				name: 'figcaption';
-				with: [ 
-					aCodeBlock hasLabel ifTrue: [ 
-							self createAnchorWith: aCodeBlock label.
-							self writeCounterForScript: aCodeBlock ].
-					aCodeBlock hasCaption ifTrue: [ 
-							self visitAll: aCodeBlock caption children ] ] .
-	canvas newLine
+		name: 'pre';
+		with: [ 
+			| code |
+			code := canvas tag
+				        name: 'code';
+				        yourself.
+			code with: [ canvas lines: aCodeBlock body ] ].
+	aCodeBlock hasCaption ifTrue: [ 
+		canvas tag
+			name: 'figcaption';
+			with: [ 
+				aCodeBlock hasLabel ifTrue: [ 
+						self createAnchorWith: aCodeBlock label.
+						self writeCounterForScript: aCodeBlock ].
+				aCodeBlock hasCaption ifTrue: [ 
+						self visitAll: aCodeBlock caption children ] ] ].
+
 ]
 
 { #category : #visiting }
@@ -263,6 +245,12 @@ MicHTMLWriter >> writeCounterDefinitionSeparator [
 MicHTMLWriter >> writeCounterElement: aCounterElement [
 
 	canvas nextPutAll: aCounterElement asString
+]
+
+{ #category : #visiting }
+MicHTMLWriter >> writeCounterElementSeparator [
+
+	canvas nextPut: $.
 ]
 
 { #category : #visiting }

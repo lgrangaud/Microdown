@@ -43,6 +43,9 @@ MicRealDumperTest >> testBoldFormat [
 	| micBold |
 	micBold := (parser parse: factory boldFormatSample) children first
 		           children first.
+	self assert: (parser parse: factory boldFormatSample) class equals: MicRootBlock.
+	self assert: (parser parse: factory boldFormatSample) children first class equals: MicParagraphBlock.
+	self assert: micBold class equals: MicBoldFormatBlock.
 	self assert: micBold children first class equals: MicTextBlock.
 	visitor visit: micBold.
 	self

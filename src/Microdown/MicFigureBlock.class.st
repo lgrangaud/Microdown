@@ -15,10 +15,7 @@ Class {
 	#superclass : #MicInlineBlockWithUrl,
 	#instVars : [
 		'parameters',
-		'reference',
-		'label',
-		'size',
-		'arguments'
+		'reference'
 	],
 	#category : #'Microdown-ModelInline'
 }
@@ -85,6 +82,14 @@ MicFigureBlock >> hasAnchor [
 	^self anchor isNotNil
 ]
 
+{ #category : #testing }
+MicFigureBlock >> hasArgumentNamed: asString [
+
+	| label |
+	label := self arguments at: asString ifAbsent: [ ^ false ].
+	^ label isEmptyOrNil not
+]
+
 { #category : #accessing }
 MicFigureBlock >> hasArguments [
 
@@ -99,6 +104,18 @@ MicFigureBlock >> hasCaption [
 { #category : #testing }
 MicFigureBlock >> hasChildren [
 	^ self children notEmpty.
+]
+
+{ #category : #testing }
+MicFigureBlock >> hasLabel [
+
+	^ self hasArgumentNamed: 'label'
+]
+
+{ #category : #testing }
+MicFigureBlock >> hasWidth [
+
+	^ self hasArgumentNamed: 'size'
 ]
 
 { #category : #accessing }
